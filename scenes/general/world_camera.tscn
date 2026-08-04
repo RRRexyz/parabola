@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cq133qsl7usfi"]
+
+[ext_resource type="Script" uid="uid://bdrtli2nkew8a" path="res://scripts/general/world_camera.gd" id="1_odaff"]
+
+[node name="WorldCamera" type="Camera2D" unique_id=635985182]
+script = ExtResource("1_odaff")

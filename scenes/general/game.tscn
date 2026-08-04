@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dpokrccg4uiyp" path="res://scenes/levels/demo/world.tscn" id="1_hdoy7"]
 [ext_resource type="PackedScene" uid="uid://k2d1th36thw0" path="res://scenes/characters/player.tscn" id="2_l8u7j"]
+[ext_resource type="PackedScene" uid="uid://cq133qsl7usfi" path="res://scenes/general/world_camera.tscn" id="3_whik6"]
 
 [node name="Game" type="Node2D" unique_id=918027414]
 
@@ -9,3 +10,6 @@
 
 [node name="Player" parent="." unique_id=1546209243 instance=ExtResource("2_l8u7j")]
 position = Vector2(412, 213)
+
+[node name="WorldCamera" parent="." unique_id=635985182 instance=ExtResource("3_whik6")]
+position = Vector2(960, 540)
