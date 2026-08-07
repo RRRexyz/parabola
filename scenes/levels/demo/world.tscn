@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://brbi13wggpdib" path="res://assets/tiles/pixel_platformer_tile_set_1.png" id="1_8rm60"]
 [ext_resource type="Script" uid="uid://b75los2bdmtkk" path="res://scripts/levels/world.gd" id="1_41wtr"]
+[ext_resource type="PackedScene" uid="uid://byjejxh3exjec" path="res://scenes/items/throwable/throwable_item.tscn" id="3_x3te2"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_41wtr"]
 texture = ExtResource("1_8rm60")
@@ -88,3 +89,8 @@ shape = SubResource("SegmentShape2D_41wtr")
 position = Vector2(0, 1080)
 shape = SubResource("SegmentShape2D_jc63w")
 disabled = true
+
+[node name="ThrowableItems" type="Node2D" parent="." unique_id=1933238720]
+
+[node name="Stone" parent="ThrowableItems" unique_id=263513040 instance=ExtResource("3_x3te2")]
+position = Vector2(784, 651)

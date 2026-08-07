@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 
 
 ## 玩家左右移动速度
