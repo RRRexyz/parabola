@@ -17,3 +17,4 @@ texture = ExtResource("1_rp718")
 shape = SubResource("RectangleShape2D_uj04i")
 
 [node name="HandSlot" type="Node2D" parent="." unique_id=1496660766]
+position = Vector2(0, -100)

@@ -53,13 +53,21 @@ layout_mode = 2
 text = "拾取"
 label_settings = SubResource("LabelSettings_1gex7")
 
-[node name="ItemInfo" type="Control" parent="." unique_id=1639914774]
+[node name="ItemInfo" type="Control" parent="." unique_id=1209481922]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 50.0
+offset_top = -33.0
+offset_right = 50.0
+offset_bottom = -33.0
 
-[node name="TextureRect" type="TextureRect" parent="ItemInfo" unique_id=1337007483]
+[node name="InfoText" type="RichTextLabel" parent="ItemInfo" unique_id=1543323027]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 400.0
+offset_bottom = 72.0
+offset_transform_enabled = true
+offset_transform_position = Vector2(5, 0)
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[color=yellow]小石子[/color]
+造成5/9/13点伤害。"

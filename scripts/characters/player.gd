@@ -7,7 +7,14 @@ class_name Player
 ## 玩家跳跃时离地初速度
 @export var jump_speed: int = 500
 
+@onready var _hand_slot: Node2D = $HandSlot
+
 var _gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
+var _held_item: RigidBody2D = null
+
+
+func _ready() -> void:
+	ItemEventBus.throwable_item_picked_up.connect(_on_throwable_item_picked_up)
 
 
 func _physics_process(delta: float) -> void:
@@ -30,3 +37,15 @@ func basic_movement_control(delta: float):
 	velocity.x = move_direction * move_speed
 
 	move_and_slide()
+
+
+func _on_throwable_item_picked_up(throwable_item: RigidBody2D):
+	# 防止重复拾取
+	if _held_item != null:
+		return
+	else:
+		_held_item = throwable_item
+		throwable_item.freeze = true
+		throwable_item.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
+		throwable_item.reparent(_hand_slot)
+		throwable_item.position = Vector2.ZERO
