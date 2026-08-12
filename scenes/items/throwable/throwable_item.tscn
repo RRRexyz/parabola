@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://cqgvvtxr26uee" path="res://scripts/items/throwable/throwable_item.gd" id="1_pey4b"]
 [ext_resource type="Texture2D" uid="uid://b410c2bnkymoo" path="res://assets/throwble_items/小石子.png" id="1_ya0lm"]
 [ext_resource type="Texture2D" uid="uid://bt1ftwchjvumw" path="res://assets/keys/LMB.png" id="3_1gex7"]
+[ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="4_ox4ra"]
+[ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="5_n5waw"]
+[ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="6_71lwv"]
+[ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="7_n5waw"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_pey4b"]
 radius = 12.0
@@ -71,3 +75,24 @@ theme_override_font_sizes/normal_font_size = 24
 bbcode_enabled = true
 text = "[color=yellow]小石子[/color]
 造成5/9/13点伤害。"
+
+[node name="StateChart" type="Node" parent="." unique_id=116100013]
+script = ExtResource("4_ox4ra")
+track_in_editor = true
+metadata/_custom_type_script = "uid://couw105c3bde4"
+
+[node name="CompoundState" type="Node" parent="StateChart" unique_id=218676017]
+script = ExtResource("5_n5waw")
+initial_state = NodePath("OnGround")
+
+[node name="OnGround" type="Node" parent="StateChart/CompoundState" unique_id=1147191210]
+script = ExtResource("6_71lwv")
+
+[node name="GroundToHand" type="Node" parent="StateChart/CompoundState/OnGround" unique_id=1333966574]
+script = ExtResource("7_n5waw")
+to = NodePath("../../OnHand")
+event = &"pickup"
+delay_in_seconds = "0.0"
+
+[node name="OnHand" type="Node" parent="StateChart/CompoundState" unique_id=1074974296]
+script = ExtResource("6_71lwv")

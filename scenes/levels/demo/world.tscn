@@ -94,3 +94,6 @@ disabled = true
 
 [node name="Stone" parent="ThrowableItems" unique_id=263513040 instance=ExtResource("3_x3te2")]
 position = Vector2(784, 651)
+
+[node name="Stone2" parent="ThrowableItems" unique_id=1138573364 instance=ExtResource("3_x3te2")]
+position = Vector2(1449, 654)

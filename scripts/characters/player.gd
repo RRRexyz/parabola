@@ -10,7 +10,7 @@ class_name Player
 @onready var _hand_slot: Node2D = $HandSlot
 
 var _gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
-var _held_item: RigidBody2D = null
+var held_item: RigidBody2D = null
 
 
 func _ready() -> void:
@@ -41,10 +41,10 @@ func basic_movement_control(delta: float):
 
 func _on_throwable_item_picked_up(throwable_item: RigidBody2D):
 	# 防止重复拾取
-	if _held_item != null:
+	if held_item != null:
 		return
 	else:
-		_held_item = throwable_item
+		held_item = throwable_item
 		throwable_item.freeze = true
 		throwable_item.freeze_mode = RigidBody2D.FREEZE_MODE_KINEMATIC
 		throwable_item.reparent(_hand_slot)
