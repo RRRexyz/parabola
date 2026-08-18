@@ -2,6 +2,8 @@ extends RigidBody2D
 
 ## 物品是否可被玩家拾取
 @export var can_pickup: bool = true
+## 物品信息
+@export var item_data: ItemData
 
 @onready var _can_pickup_prompt: HBoxContainer = $CanPickupPrompt
 @onready var _can_interact_area: Area2D = $CanInteractArea
@@ -36,15 +38,16 @@ func _process(_delta: float) -> void:
 	# 3. 有玩家位于物品可拾取范围内
 	# 4. 物品允许拾取
 	if Input.is_action_just_pressed("player_pickup_item") and _is_mouse_on_item and _player_in_range != null and can_pickup:
-		# 此处必须先让状态机发送事件，然后再让玩家节点对当前物品节点进行重挂载，原因见percautions.md[2]
-		_state_chart.send_event("pickup")
-		ItemEventBus.throwable_item_picked_up.emit(self)
+		if PlayerInventory.inventory.add_item(item_data):
+			# 此处必须先让状态机发送事件，然后再让玩家节点对当前物品节点进行重挂载，原因见percautions.md[2]
+			_state_chart.send_event("pickup")
+			ItemEventBus.throwable_item_picked_up.emit(self)
 
 
 func _on_body_entered(body: Node2D):
 	if body is Player:
 		_player_in_range = body
-		if can_pickup and body.held_item == null:
+		if can_pickup:
 			_can_pickup_prompt.show()
 
 

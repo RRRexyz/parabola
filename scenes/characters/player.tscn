@@ -6,6 +6,9 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uj04i"]
 size = Vector2(128, 128)
 
+[sub_resource type="LabelSettings" id="LabelSettings_yewv4"]
+font_size = 24
+
 [node name="Player" type="CharacterBody2D" unique_id=1546209243]
 collision_layer = 2
 script = ExtResource("1_yewv4")
@@ -18,3 +21,20 @@ shape = SubResource("RectangleShape2D_uj04i")
 
 [node name="HandSlot" type="Node2D" parent="." unique_id=1496660766]
 position = Vector2(0, -100)
+
+[node name="InventorySlot" type="Node2D" parent="." unique_id=587911720]
+
+[node name="InventorySlotsFullPrompt" type="Label" parent="." unique_id=535094573]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -161.0
+offset_right = 20.0
+offset_bottom = -138.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "我已经装不下这个装备了！"
+label_settings = SubResource("LabelSettings_yewv4")

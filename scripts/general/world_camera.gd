@@ -11,14 +11,14 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	var move_direction := get_mouse_edge_direction()
+	var move_direction := _get_mouse_edge_direction()
 	position += move_direction * move_speed * delta
 	# 把相机中心钳制在 limit 范围内，避免 position 越界累积，导致反向移动需先"追回"越界距离
-	clamp_position_to_limits()
+	_clamp_position_to_limits()
 
 
 ## 根据鼠标指针在屏幕边缘阈值内的深度计算移动方向与强度（越靠近边缘速度越快，指针回到阈值内则停止）
-func get_mouse_edge_direction() -> Vector2:
+func _get_mouse_edge_direction() -> Vector2:
 	var mouse_pos := get_viewport().get_mouse_position()
 	var screen_size := get_viewport_rect().size
 	var direction := Vector2.ZERO
@@ -40,7 +40,7 @@ func get_mouse_edge_direction() -> Vector2:
 
 
 ## 将相机中心钳制在世界边界内（与 Camera2D 内置 limit 钳制逻辑一致）
-func clamp_position_to_limits() -> void:
+func _clamp_position_to_limits() -> void:
 	var full_screen := get_viewport_rect().size * zoom
 	var half_screen := full_screen * 0.5
 	# 水平：世界宽度不小于视口时，中心限制在 [左+半屏, 右-半屏]；世界比视口窄时居中

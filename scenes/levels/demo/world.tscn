@@ -97,3 +97,18 @@ position = Vector2(784, 651)
 
 [node name="Stone2" parent="ThrowableItems" unique_id=1138573364 instance=ExtResource("3_x3te2")]
 position = Vector2(1449, 654)
+
+[node name="Stone3" parent="ThrowableItems" unique_id=1452439684 instance=ExtResource("3_x3te2")]
+position = Vector2(1919, 667)
+
+[node name="Stone4" parent="ThrowableItems" unique_id=239402070 instance=ExtResource("3_x3te2")]
+position = Vector2(1152, 743)
+
+[node name="Stone5" parent="ThrowableItems" unique_id=1718563656 instance=ExtResource("3_x3te2")]
+position = Vector2(1684, 754)
+
+[node name="Stone6" parent="ThrowableItems" unique_id=1609822827 instance=ExtResource("3_x3te2")]
+position = Vector2(227, 720)
+
+[node name="Stone7" parent="ThrowableItems" unique_id=1837525181 instance=ExtResource("3_x3te2")]
+position = Vector2(531, 695)

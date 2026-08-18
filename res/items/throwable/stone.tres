@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bstlmdbvf4qn3"]
+
+[ext_resource type="Script" uid="uid://bfw6mghcvc3gr" path="res://res/items/item_data.gd" id="1_1f5iy"]
+[ext_resource type="Texture2D" uid="uid://b410c2bnkymoo" path="res://assets/throwble_items/小石子.png" id="1_7dbyx"]
+
+[resource]
+script = ExtResource("1_1f5iy")
+type_name = &"小石子"
+icon = ExtResource("1_7dbyx")
+max_stack_size = 3

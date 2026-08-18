@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cqgvvtxr26uee" path="res://scripts/items/throwable/throwable_item.gd" id="1_pey4b"]
 [ext_resource type="Texture2D" uid="uid://b410c2bnkymoo" path="res://assets/throwble_items/小石子.png" id="1_ya0lm"]
+[ext_resource type="Resource" uid="uid://bstlmdbvf4qn3" path="res://res/items/throwable/stone.tres" id="2_71lwv"]
 [ext_resource type="Texture2D" uid="uid://bt1ftwchjvumw" path="res://assets/keys/LMB.png" id="3_1gex7"]
 [ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="4_ox4ra"]
 [ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="5_n5waw"]
@@ -21,6 +22,7 @@ font_size = 36
 z_index = 1
 collision_layer = 4
 script = ExtResource("1_pey4b")
+item_data = ExtResource("2_71lwv")
 
 [node name="Image" type="Sprite2D" parent="." unique_id=1846325524]
 texture = ExtResource("1_ya0lm")

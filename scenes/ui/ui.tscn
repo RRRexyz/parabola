@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://mm6sm6rnj540"]
+
+[ext_resource type="PackedScene" uid="uid://do7gv5o0fbwdn" path="res://scenes/ui/inventory.tscn" id="1_u7n8c"]
+
+[node name="Ui" type="CanvasLayer" unique_id=1228484819]
+
+[node name="Inventory" parent="." unique_id=954411812 instance=ExtResource("1_u7n8c")]

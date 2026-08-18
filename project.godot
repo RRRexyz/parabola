@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 WorldEventBus="*uid://bwopjyeoxqfbn"
 ItemEventBus="*uid://c488uysagwlne"
+PlayerInventory="*uid://bun3itbpqx7b1"
 
 [display]
 
