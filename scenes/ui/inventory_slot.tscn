@@ -2,12 +2,37 @@
 
 [ext_resource type="Script" uid="uid://dyhuusrqnclpk" path="res://scripts/ui/inventory_slot.gd" id="1_kscix"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uw4km"]
-bg_color = Color(0.6, 0.5882353, 0.6, 0.65882355)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kscix"]
+bg_color = Color(0.6, 0.6, 0.6, 0.6509804)
 border_width_left = 4
 border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r4ab7"]
+bg_color = Color(0.6, 0.6, 0.6, 0.6509804)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.6781046, 0.88594323, 0.15022948, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ru537"]
+bg_color = Color(0.6, 0.6, 0.6, 0.6509804)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.81960785, 0.73333335, 0.45882353, 1)
 corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
@@ -18,9 +43,15 @@ corner_radius_bottom_left = 12
 [sub_resource type="LabelSettings" id="LabelSettings_f04ki"]
 font_size = 32
 
-[node name="InventorySlot" type="Panel" unique_id=1666693967]
+[node name="InventorySlot" type="Button" unique_id=412549835]
 custom_minimum_size = Vector2(128, 128)
-theme_override_styles/panel = SubResource("StyleBoxFlat_uw4km")
+offset_right = 128.0
+offset_bottom = 128.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_kscix")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_r4ab7")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ru537")
+toggle_mode = true
+action_mode = 0
 script = ExtResource("1_kscix")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=803853762]
@@ -34,10 +65,10 @@ stretch_mode = 3
 
 [node name="Label" type="Label" parent="." unique_id=250784276]
 layout_mode = 0
-offset_left = 5.0
-offset_top = -5.0
-offset_right = 123.0
-offset_bottom = 40.0
+offset_left = 9.0
+offset_top = -1.0
+offset_right = 119.0
+offset_bottom = 44.0
 text = "0"
 label_settings = SubResource("LabelSettings_f04ki")
 horizontal_alignment = 2

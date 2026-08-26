@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cqgvvtxr26uee" path="res://scripts/items/throwable/throwable_item.gd" id="1_pey4b"]
 [ext_resource type="Texture2D" uid="uid://b410c2bnkymoo" path="res://assets/throwble_items/小石子.png" id="1_ya0lm"]
-[ext_resource type="Resource" uid="uid://bstlmdbvf4qn3" path="res://res/items/throwable/stone.tres" id="2_71lwv"]
+[ext_resource type="Resource" uid="uid://bstlmdbvf4qn3" path="res://resources/items/throwable/stone.tres" id="2_71lwv"]
 [ext_resource type="Texture2D" uid="uid://bt1ftwchjvumw" path="res://assets/keys/LMB.png" id="3_1gex7"]
 [ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="4_ox4ra"]
 [ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="5_n5waw"]
@@ -21,6 +21,8 @@ font_size = 36
 [node name="ThrowableItem" type="RigidBody2D" unique_id=263513040]
 z_index = 1
 collision_layer = 4
+collision_mask = 5
+lock_rotation = true
 script = ExtResource("1_pey4b")
 item_data = ExtResource("2_71lwv")
 
@@ -98,3 +100,30 @@ delay_in_seconds = "0.0"
 
 [node name="OnHand" type="Node" parent="StateChart/CompoundState" unique_id=1074974296]
 script = ExtResource("6_71lwv")
+
+[node name="HandToBag" type="Node" parent="StateChart/CompoundState/OnHand" unique_id=1714241424]
+script = ExtResource("7_n5waw")
+to = NodePath("../../InBag")
+event = &"store"
+delay_in_seconds = "0.0"
+
+[node name="HandToGround" type="Node" parent="StateChart/CompoundState/OnHand" unique_id=631356016]
+script = ExtResource("7_n5waw")
+to = NodePath("../../OnGround")
+event = &"discard"
+delay_in_seconds = "0.0"
+
+[node name="InBag" type="Node" parent="StateChart/CompoundState" unique_id=514443102]
+script = ExtResource("6_71lwv")
+
+[node name="BagToGround" type="Node" parent="StateChart/CompoundState/InBag" unique_id=1804855189]
+script = ExtResource("7_n5waw")
+to = NodePath("../../OnGround")
+event = &"discard"
+delay_in_seconds = "0.0"
+
+[node name="BagToHand" type="Node" parent="StateChart/CompoundState/InBag" unique_id=2073708351]
+script = ExtResource("7_n5waw")
+to = NodePath("../../OnHand")
+event = &"take"
+delay_in_seconds = "0.0"

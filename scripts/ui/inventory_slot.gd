@@ -1,4 +1,4 @@
-class_name InventorySlotNode extends Panel
+class_name InventorySlotNode extends Button
 
 
 var item: ItemData:
@@ -12,19 +12,25 @@ var quantity: int = 0:
 			quantity = value
 			_on_quantity_changed(value)
 
-@onready var texture: TextureRect = $TextureRect
-@onready var label: Label = $Label
+@onready var _texture: TextureRect = $TextureRect
+@onready var _label: Label = $Label
 
 
 func _ready() -> void:
-	label.hide()
+	_label.hide()
 
 
 func _on_quantity_changed(value: int):
 	if value > 0:
-		label.show()
-	label.text = str(value)
+		_label.show()
+		_label.text = str(value)
+	else:
+		_label.hide()
 
 
 func _on_item_changed(value: ItemData):
-	texture.texture = value.icon
+	if value == null:
+		_texture.texture = null
+		return
+
+	_texture.texture = value.icon
