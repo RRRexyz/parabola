@@ -12,6 +12,8 @@ class_name Player extends CharacterBody2D
 
 var _gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var held_item: RigidBody2D
+## 丢弃落点的左右交替方向，见 _on_item_discarded
+var _discard_side := 1
 
 
 func _ready() -> void:
@@ -31,6 +33,19 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_basic_movement_control(delta)
+
+
+func _process(_delta: float) -> void:
+	# 按下丢弃键时丢弃当前手持的单个物品；空手时不动作
+	# 物理还原（清手持、状态机、reparent 回世界）由 _on_item_discarded 统一处理
+	if Input.is_action_just_pressed("player_discard_item") and held_item != null:
+		var discarded := held_item
+		var slot_index := PlayerInventory.inventory.get_slot_index_of(discarded)
+		PlayerInventory.inventory.discard_item(discarded)
+		# 丢弃后若槽位仍有堆叠物品，自动取出下一个上手；槽位已空则由 UI 取消选中（见 inventory.gd）
+		var next_item := PlayerInventory.inventory.get_latest_item(slot_index)
+		if next_item != null and next_item != discarded:	# 防御：数据异常时避免取回刚丢弃的同一节点
+			_take_item(next_item)
 
 
 func _basic_movement_control(delta: float):
@@ -75,9 +90,16 @@ func _on_item_discarded(item: RigidBody2D, spread_index: int):
 	item.state_chart.send_event("discard")
 	item.show()
 	item.freeze = false
+	item.sleeping = false					# 显式唤醒，防止解冻后仍保持睡眠
+	item.linear_velocity = Vector2.ZERO	# 清掉拾取前残留的速度，丢弃应从静止开始下落
+	item.angular_velocity = 0.0
 	item.can_pickup = true
 	item.reparent(item.world_parent_node)
-	item.global_position = _hand_slot.global_position + Vector2(spread_index * 48.0, 0)
+	# 落点向手的侧方偏移并左右交替：丢弃后若自动上手了新物品，两者位置错开，
+	# 防止被丢弃物品落在手持物品顶上而悬空（冻结的手持物对物理引擎是支撑平台）
+	var offset_x := spread_index * 48.0 + _discard_side * 30.0 + randf_range(-6.0, 6.0)
+	_discard_side = -_discard_side
+	item.global_position = _hand_slot.global_position + Vector2(offset_x, -8.0)
 
 
 func _on_slot_deselected(slot_index: int):
@@ -101,7 +123,11 @@ func _on_slot_selected(slot_index: int):
 	if item == null or item == held_item:
 		return 						# 空槽或本来就在手上，直接返回
 	_store_held_item()              # 收纳旧手持（其数据仍在原槽，不丢）
+	_take_item(item)
 
+
+## 将物品节点拿到手上（调用前确保该物品不在手上）
+func _take_item(item: RigidBody2D):
 	# 先发状态机事件，再操作树，原因见percautions.md[2]
 	item.state_chart.send_event("take")
 	item.freeze = true

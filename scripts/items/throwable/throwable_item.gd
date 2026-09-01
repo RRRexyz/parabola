@@ -11,7 +11,6 @@ class_name ThrowableItem extends RigidBody2D
 @onready var state_chart: StateChart = $StateChart
 @onready var _pickup_transition: Transition = $StateChart/CompoundState/OnGround/GroundToHand
 
-var _is_mouse_on_item: bool = false
 var _player_in_range: Player
 var world_parent_node: Node2D
 
@@ -20,12 +19,6 @@ func _ready() -> void:
 	world_parent_node = get_parent()
 	_can_pickup_prompt.hide()
 	_item_info.hide()
-
-	if OS.is_debug_build():
-		# 临时调试：验证状态机真实切换
-		$StateChart/CompoundState/OnHand.state_entered.connect(func(): print("%s → OnHand" % name))
-		$StateChart/CompoundState/InBag.state_entered.connect(func(): print("%s → InBag" % name))
-		$StateChart/CompoundState/OnGround.state_entered.connect(func(): print("%s → OnGround" % name))
 
 	# 可拾取物品的Area2D检测到玩家进出时，修改可拾取提示的可见性
 	_can_interact_area.body_entered.connect(_on_body_entered)
@@ -45,7 +38,7 @@ func _process(_delta: float) -> void:
 	# 2. 鼠标指针位于物品可拾取范围内
 	# 3. 有玩家位于物品可拾取范围内
 	# 4. 物品允许拾取
-	if Input.is_action_just_pressed("player_pickup_item") and _is_mouse_on_item and _player_in_range != null and can_pickup:
+	if Input.is_action_just_pressed("player_pickup_item") and _player_in_range != null and can_pickup:
 		if PlayerInventory.inventory.add_item(self):
 			# 此处必须先让状态机发送事件，然后再让玩家节点对当前物品节点进行重挂载，原因见percautions.md[2]
 			state_chart.send_event("pickup")
@@ -67,12 +60,10 @@ func _on_body_exited(body: Node2D):
 
 func _on_mouse_entered():
 	_item_info.show()
-	_is_mouse_on_item = true
 
 
 func _on_mouse_exited():
 	_item_info.hide()
-	_is_mouse_on_item = false
 
 
 func _on_pickup_transition():

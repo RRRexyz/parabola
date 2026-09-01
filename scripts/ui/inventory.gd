@@ -15,7 +15,8 @@ func _ready() -> void:
 		var inventory_slot := get_node("InventorySlot%d" % (i + 1)) as InventorySlotNode
 		_slots.append(inventory_slot)
 		inventory_slot.button_group = _button_group
-		inventory_slot.gui_input.connect(_on_gui_input.bind(i))
+		# 已弃用：右键物品槽丢弃槽中所有物品，现改由 player_discard_item 输入丢弃手持的单个物品
+		# inventory_slot.gui_input.connect(_on_gui_input.bind(i))
 		inventory_slot.toggled.connect(_on_slot_toggled.bind(i))
 	_button_group.allow_unpress = true
 
@@ -31,13 +32,17 @@ func _on_slot_changed(index: int, item: ItemData, quantity: int):
 		_auto_selecting = true    # 拾取物体触发的程序化选中，不触发取出逻辑
 		_slots[index].button_pressed = true
 		_auto_selecting = false
+	else:
+		# 槽位被丢弃清空时，取消其选中状态
+		_slots[index].button_pressed = false
 
 
-func _on_gui_input(event: InputEvent, slot_index: int):
-	if event is InputEventMouseButton:
-		if event.pressed:
-			if event.button_index == MOUSE_BUTTON_RIGHT:
-				PlayerInventory.inventory.discard_item(slot_index)
+# 已弃用：右键物品槽丢弃该槽中所有物品，现由玩家按下 player_discard_item 丢弃手持的单个物品
+# func _on_gui_input(event: InputEvent, slot_index: int):
+# 	if event is InputEventMouseButton:
+# 		if event.pressed:
+# 			if event.button_index == MOUSE_BUTTON_RIGHT:
+# 				PlayerInventory.inventory.discard_items(slot_index)
 
 
 func _on_slot_toggled(toggled_on: bool, slot_index: int):

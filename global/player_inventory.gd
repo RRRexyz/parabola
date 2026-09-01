@@ -32,6 +32,9 @@ class Inventory extends Node:
 
 
 	func add_item(item: RigidBody2D) -> bool:
+		# 防御：同一节点不应重复注册；重复注册会导致丢弃后自动上手逻辑错误地取回刚丢弃的节点
+		if get_slot_index_of(item) != -1:
+			return true
 		var item_data: ItemData = item.item_data
 
 		# 先尝试堆叠到已有物品
@@ -61,7 +64,8 @@ class Inventory extends Node:
 		return -1
 
 
-	func discard_item(index: int) -> void:
+	## 已弃用：整格丢弃（现改为丢弃手持的单个物品，见 discard_item）；保留代码暂不删除
+	func discard_items(index: int) -> void:
 		var slot := slots[index]
 		if slot == null or slot.quantity <= 0:
 			return
@@ -84,6 +88,23 @@ class Inventory extends Node:
 
 
 	func get_latest_item(index: int) -> RigidBody2D:
-		if slots[index] == null or slots[index].items.is_empty():
+		if index < 0 or index >= capacity or slots[index] == null or slots[index].items.is_empty():
 			return null
 		return slots[index].items.back()
+
+
+	## 丢弃单个物品节点（丢弃手持物品时使用）
+	## 从所在槽位移除该节点；槽位清空后整个槽位置空
+	func discard_item(item: RigidBody2D) -> void:
+		var index := get_slot_index_of(item)
+		if index == -1:
+			return
+		var slot := slots[index]
+		slot.items.erase(item)
+		slot.quantity -= 1
+		if slot.quantity == 0:
+			slots[index] = null
+			slot_changed.emit(index, null, 0)
+		else:
+			slot_changed.emit(index, slot.item_data, slot.quantity)
+		item_discarded.emit(item, 0)
