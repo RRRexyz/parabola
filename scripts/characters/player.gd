@@ -9,12 +9,19 @@ class_name Player extends CharacterBody2D
 @onready var _hand_slot: Node2D = $HandSlot
 @onready var _inventory_slot: Node2D = $InventorySlot
 @onready var _inventory_slots_full_prompt: Label = $InventorySlotsFullPrompt
+@onready var _state_chart: StateChart = $StateChart
+@onready var _charging_state: AtomicState = $StateChart/ParallelState/ThrowChargerState/Charging
 
 var _gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity", 980.0)
 var held_item: RigidBody2D
 ## 丢弃落点的左右交替方向，见 _on_item_discarded
 var _discard_side := 1
-
+## 开始蓄力时鼠标指针在游戏界面上的绝对坐标
+var _charge_press_screen_coor := Vector2.ZERO
+## 投掷方向向量
+var _throw_dir := Vector2.RIGHT
+## 投掷角度（弧度）
+var _throw_angle := 0.0
 
 func _ready() -> void:
 	_inventory_slots_full_prompt.hide()
@@ -23,12 +30,14 @@ func _ready() -> void:
 	ItemEventBus.throwable_item_picked_up.connect(_on_throwable_item_picked_up)
 	# 当物品槽被取消选中时，将手上的物品存入物品槽中
 	ItemEventBus.slot_deselected.connect(_on_slot_deselected)
-	# 
+	# 当物品槽被选中时，若物品槽中有物品将其中最新放入的那一个拿到手上；若手上已经有物品，将该物品存入物品槽中
 	ItemEventBus.slot_selected.connect(_on_slot_selected)
 	# 物品栏满后继续拾取物品，展示已满提示2秒
 	PlayerInventory.inventory.slots_full.connect(_on_inventory_slots_full)
 	# 丢弃物品槽中的物品到地上
 	PlayerInventory.inventory.item_discarded.connect(_on_item_discarded)
+
+	_charging_state.state_entered.connect(_on_charging_entered)
 
 
 func _physics_process(delta: float) -> void:
@@ -36,16 +45,17 @@ func _physics_process(delta: float) -> void:
 
 
 func _process(_delta: float) -> void:
-	# 按下丢弃键时丢弃当前手持的单个物品；空手时不动作
-	# 物理还原（清手持、状态机、reparent 回世界）由 _on_item_discarded 统一处理
-	if Input.is_action_just_pressed("player_discard_item") and held_item != null:
-		var discarded := held_item
-		var slot_index := PlayerInventory.inventory.get_slot_index_of(discarded)
-		PlayerInventory.inventory.discard_item(discarded)
-		# 丢弃后若槽位仍有堆叠物品，自动取出下一个上手；槽位已空则由 UI 取消选中（见 inventory.gd）
-		var next_item := PlayerInventory.inventory.get_latest_item(slot_index)
-		if next_item != null and next_item != discarded:	# 防御：数据异常时避免取回刚丢弃的同一节点
-			_take_item(next_item)
+	_discard_item_detect()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	# 蓄力启动守卫（仅按下瞬间判定）：
+	# 1. 点击未被任何 UI 消费——_unhandled_input 天然只收到 GUI 没有处理的事件，无需再查悬停控件
+	# 2. 按下点须高于或齐平于手中物品（世界坐标 y 更小），避免连线角度向下、把物品丢向地面
+	if event.is_action_pressed("player_throw_charge") and held_item != null \
+			and held_item.item_data.can_throw \
+			and get_global_mouse_position().y <= held_item.global_position.y:
+		_state_chart.send_event("charge")
 
 
 func _basic_movement_control(delta: float):
@@ -136,3 +146,25 @@ func _take_item(item: RigidBody2D):
 	item.reparent(_hand_slot)
 	item.position = Vector2.ZERO
 	held_item = item
+
+
+func _discard_item_detect():
+	# 按下丢弃键时丢弃当前手持的单个物品；空手时不动作
+	# 物理还原（清手持、状态机、reparent 回世界）由 _on_item_discarded 统一处理
+	if Input.is_action_just_pressed("player_discard_item") and held_item != null:
+		var discarded := held_item
+		var slot_index := PlayerInventory.inventory.get_slot_index_of(discarded)
+		PlayerInventory.inventory.discard_item(discarded)
+		# 丢弃后若槽位仍有堆叠物品，自动取出下一个上手；槽位已空则由 UI 取消选中（见 inventory.gd）
+		var next_item := PlayerInventory.inventory.get_latest_item(slot_index)
+		if next_item != null and next_item != discarded:	# 防御：数据异常时避免取回刚丢弃的同一节点
+			_take_item(next_item)
+
+
+func _on_charging_entered():
+	# 按下瞬间锁定：角度、滑条屏幕坐标、力度初值
+	_charge_press_screen_coor = get_viewport().get_mouse_position()
+	_throw_dir = (get_global_mouse_position() - held_item.global_position).normalized()
+	# 因为2D世界中y轴正方向向下，所以角度为反正切值的相反数
+	_throw_angle = -atan2(_throw_dir.y, _throw_dir.x) / PI * 180.0
+	
