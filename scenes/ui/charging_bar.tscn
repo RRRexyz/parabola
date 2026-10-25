@@ -1,5 +1,9 @@
 [gd_scene format=3 uid="uid://dvy68p8akda0p"]
 
+[ext_resource type="Script" uid="uid://bnwvils8ttn70" path="res://scripts/ui/charging_bar.gd" id="1_85o1f"]
+[ext_resource type="Texture2D" uid="uid://cyiragixvnqu5" path="res://assets/ui/蓄力条.png" id="1_d88h8"]
+[ext_resource type="Texture2D" uid="uid://d3srt5w4rahvt" path="res://assets/ui/蓄力条指针.png" id="2_85o1f"]
+
 [node name="ChargingBar" type="Control" unique_id=1722947711]
 layout_mode = 3
 anchors_preset = 15
@@ -7,3 +11,20 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_85o1f")
+
+[node name="Bar" type="TextureRect" parent="." unique_id=2031711694]
+layout_mode = 0
+offset_left = -200.0
+offset_top = -20.0
+offset_right = 200.0
+offset_bottom = 20.0
+texture = ExtResource("1_d88h8")
+
+[node name="Indicator" type="TextureRect" parent="." unique_id=1820995532]
+layout_mode = 0
+offset_left = -6.0
+offset_top = -40.0
+offset_right = 6.0
+offset_bottom = 40.0
+texture = ExtResource("2_85o1f")

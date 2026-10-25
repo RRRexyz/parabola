@@ -29,7 +29,7 @@ func _on_slot_changed(index: int, item: ItemData, quantity: int):
 
 	# 有新物品进入该槽时（拾取/堆叠），自动选中该槽；item 为 null 是丢弃清空，跳过
 	if item != null:
-		_auto_selecting = true    # 拾取物体触发的程序化选中，不触发取出逻辑
+		_auto_selecting = true # 拾取物体触发的程序化选中，不触发取出逻辑
 		_slots[index].button_pressed = true
 		_auto_selecting = false
 	else:

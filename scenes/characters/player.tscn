@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="5_eojnx"]
 [ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="6_qgnko"]
 [ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="7_eojnx"]
-[ext_resource type="PackedScene" uid="uid://bcwkugn6v3oy7" path="res://addons/godot_state_charts/utilities/state_chart_debugger.tscn" id="8_eojnx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_uj04i"]
 size = Vector2(128, 128)
@@ -68,12 +67,3 @@ delay_in_seconds = "0.0"
 
 [node name="Charging" type="Node" parent="StateChart/ParallelState/ThrowChargerState" unique_id=1497119883]
 script = ExtResource("6_qgnko")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1283731685]
-
-[node name="StateChartDebugger" parent="CanvasLayer" unique_id=1366663046 instance=ExtResource("8_eojnx")]
-offset_left = 1461.0
-offset_top = 5.0
-offset_right = -9.0
-offset_bottom = -659.0
-initial_node_to_watch = NodePath("../../StateChart")

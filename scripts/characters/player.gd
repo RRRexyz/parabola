@@ -32,6 +32,7 @@ func _ready() -> void:
 	ItemEventBus.slot_deselected.connect(_on_slot_deselected)
 	# 当物品槽被选中时，若物品槽中有物品将其中最新放入的那一个拿到手上；若手上已经有物品，将该物品存入物品槽中
 	ItemEventBus.slot_selected.connect(_on_slot_selected)
+
 	# 物品栏满后继续拾取物品，展示已满提示2秒
 	PlayerInventory.inventory.slots_full.connect(_on_inventory_slots_full)
 	# 丢弃物品槽中的物品到地上
@@ -62,7 +63,7 @@ func _basic_movement_control(delta: float):
 	# 如果玩家在地面上，允许跳跃，不跳跃则纵向速度清零
 	if is_on_floor():
 		if Input.is_action_just_pressed("player_jump"):
-			velocity.y = -jump_speed
+			velocity.y = - jump_speed
 		else:
 			velocity.y = 0
 	# 如果玩家不在地面上，应用重力
@@ -94,21 +95,21 @@ func _on_inventory_slots_full():
 
 func _on_item_discarded(item: RigidBody2D, spread_index: int):
 	# 丢弃的槽位里包含手持节点时清空手
-	if held_item == item: 
+	if held_item == item:
 		held_item = null
 	
 	item.state_chart.send_event("discard")
 	item.show()
 	item.freeze = false
-	item.sleeping = false					# 显式唤醒，防止解冻后仍保持睡眠
-	item.linear_velocity = Vector2.ZERO	# 清掉拾取前残留的速度，丢弃应从静止开始下落
+	item.sleeping = false # 显式唤醒，防止解冻后仍保持睡眠
+	item.linear_velocity = Vector2.ZERO # 清掉拾取前残留的速度，丢弃应从静止开始下落
 	item.angular_velocity = 0.0
 	item.can_pickup = true
 	item.reparent(item.world_parent_node)
 	# 落点向手的侧方偏移并左右交替：丢弃后若自动上手了新物品，两者位置错开，
 	# 防止被丢弃物品落在手持物品顶上而悬空（冻结的手持物对物理引擎是支撑平台）
 	var offset_x := spread_index * 48.0 + _discard_side * 30.0 + randf_range(-6.0, 6.0)
-	_discard_side = -_discard_side
+	_discard_side = - _discard_side
 	item.global_position = _hand_slot.global_position + Vector2(offset_x, -8.0)
 
 
@@ -131,8 +132,8 @@ func _store_held_item():
 func _on_slot_selected(slot_index: int):
 	var item := PlayerInventory.inventory.get_latest_item(slot_index)
 	if item == null or item == held_item:
-		return 						# 空槽或本来就在手上，直接返回
-	_store_held_item()              # 收纳旧手持（其数据仍在原槽，不丢）
+		return # 空槽或本来就在手上，直接返回
+	_store_held_item() # 收纳旧手持（其数据仍在原槽，不丢）
 	_take_item(item)
 
 
@@ -157,7 +158,7 @@ func _discard_item_detect():
 		PlayerInventory.inventory.discard_item(discarded)
 		# 丢弃后若槽位仍有堆叠物品，自动取出下一个上手；槽位已空则由 UI 取消选中（见 inventory.gd）
 		var next_item := PlayerInventory.inventory.get_latest_item(slot_index)
-		if next_item != null and next_item != discarded:	# 防御：数据异常时避免取回刚丢弃的同一节点
+		if next_item != null and next_item != discarded: # 防御：数据异常时避免取回刚丢弃的同一节点
 			_take_item(next_item)
 
 
@@ -166,5 +167,7 @@ func _on_charging_entered():
 	_charge_press_screen_coor = get_viewport().get_mouse_position()
 	_throw_dir = (get_global_mouse_position() - held_item.global_position).normalized()
 	# 因为2D世界中y轴正方向向下，所以角度为反正切值的相反数
-	_throw_angle = -atan2(_throw_dir.y, _throw_dir.x) / PI * 180.0
+	_throw_angle = - atan2(_throw_dir.y, _throw_dir.x) / PI * 180.0
 	
+
+	ItemEventBus.charging_started.emit()

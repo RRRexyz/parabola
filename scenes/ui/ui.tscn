@@ -1,7 +1,15 @@
 [gd_scene format=3 uid="uid://mm6sm6rnj540"]
 
 [ext_resource type="PackedScene" uid="uid://do7gv5o0fbwdn" path="res://scenes/ui/inventory.tscn" id="1_u7n8c"]
+[ext_resource type="PackedScene" uid="uid://dvy68p8akda0p" path="res://scenes/ui/charging_bar.tscn" id="2_f5cxw"]
 
 [node name="Ui" type="CanvasLayer" unique_id=1228484819]
 
 [node name="Inventory" parent="." unique_id=954411812 instance=ExtResource("1_u7n8c")]
+
+[node name="ChargingBar" parent="." unique_id=1722947711 instance=ExtResource("2_f5cxw")]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
