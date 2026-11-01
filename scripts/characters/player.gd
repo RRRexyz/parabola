@@ -20,8 +20,8 @@ var _discard_side := 1
 var _charge_press_screen_coor := Vector2.ZERO
 ## 投掷方向向量
 var _throw_dir := Vector2.RIGHT
-## 投掷角度（弧度）
-var _throw_angle := 0.0
+## 投掷角度
+var _throw_angle_deg := 0.0
 
 func _ready() -> void:
 	_inventory_slots_full_prompt.hide()
@@ -167,7 +167,7 @@ func _on_charging_entered():
 	_charge_press_screen_coor = get_viewport().get_mouse_position()
 	_throw_dir = (get_global_mouse_position() - held_item.global_position).normalized()
 	# 因为2D世界中y轴正方向向下，所以角度为反正切值的相反数
-	_throw_angle = - atan2(_throw_dir.y, _throw_dir.x) / PI * 180.0
+	_throw_angle_deg = - atan2(_throw_dir.y, _throw_dir.x) / PI * 180.0
 	
 
-	ItemEventBus.charging_started.emit()
+	ItemEventBus.charging_started.emit(roundi(_throw_angle_deg), held_item.global_position)

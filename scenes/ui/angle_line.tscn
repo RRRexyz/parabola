@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://luyas6jc3hws"]
+
+[ext_resource type="Script" uid="uid://bhoo40ii44omp" path="res://scripts/ui/angle_line.gd" id="1_53rrj"]
+
+[node name="AngleLine" type="Control" unique_id=2115270648]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_53rrj")
