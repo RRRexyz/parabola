@@ -22,6 +22,8 @@ var _charge_press_screen_coor := Vector2.ZERO
 var _throw_dir := Vector2.RIGHT
 ## 投掷角度
 var _throw_angle_deg := 0.0
+## 投掷角度预览线当前是否可见，用于只在状态变化时广播隐藏
+var _angle_preview_visible := false
 
 func _ready() -> void:
 	_inventory_slots_full_prompt.hide()
@@ -47,6 +49,7 @@ func _physics_process(delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	_discard_item_detect()
+	_update_throw_angle_preview()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -75,6 +78,31 @@ func _basic_movement_control(delta: float):
 	velocity.x = move_direction * move_speed
 
 	move_and_slide()
+
+
+## 手持可投掷物品且鼠标指针高于物品时，实时更新投掷角度预览线
+func _update_throw_angle_preview() -> void:
+	var can_preview: bool = held_item != null and held_item.item_data != null \
+			and held_item.item_data.can_throw
+
+	var item_position := Vector2.ZERO
+	var mouse_position := Vector2.ZERO
+	if can_preview:
+		item_position = held_item.global_position
+		mouse_position = get_global_mouse_position()
+		can_preview = mouse_position.y < item_position.y
+
+	if not can_preview:
+		if _angle_preview_visible:
+			_angle_preview_visible = false
+			ItemEventBus.throw_angle_preview_updated.emit(false, 0, Vector2.ZERO)
+		return
+
+	# 因为2D世界中y轴正方向向下，所以角度为反正切值的相反数
+	var throw_angle_deg := roundi(-atan2(mouse_position.y - item_position.y, mouse_position.x - item_position.x) / PI * 180.0)
+	_angle_preview_visible = true
+	# 每帧广播，保证鼠标、玩家移动以及相机滚动时预览线都能实时跟随
+	ItemEventBus.throw_angle_preview_updated.emit(true, throw_angle_deg, item_position)
 
 
 func _on_throwable_item_picked_up(throwable_item: RigidBody2D):
